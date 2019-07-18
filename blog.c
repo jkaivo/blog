@@ -9,29 +9,8 @@
 #include <unistd.h>
 #include "blog.h"
 
-#include <errno.h>
-
-#define DOCTYPE	"<!DOCTYPE html>\n"
-#define HTML	"<html lang=\"en\">\n"
-#define META	"<meta charset=\"utf-8\">\n"
-#define TITLE	"<title>%s</title>\n"
-#define ICON	"<link type=\"shortcut icon\" href=\"/icon.png\">\n"
-#define STYLE	"<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">\n"
-#define BODY	"</html>\n<body>\n"
-
-#define HTML_HEAD DOCTYPE HTML META TITLE ICON STYLE BODY
-
-#define ADDRESS	"<address>Copyright &copy; %d <a href=\"/\">Jakob Kaivo</a> &lt;<a href=\"mailto:jakob@kaivo.net\">jakob@kaivo.net</a>&gt;\n"
-
-#define HTML_TAIL "\n" ADDRESS "</body>\n</html>\n"
-
 int handle_post(void)
 {
-	/*
-	printf("Status: 200 OK\r\n");
-	printf("Content-Type: text/plain\r\n\r\n");
-	*/
-
 	read_post_data();
 	if (!authenticate(find_post_data("username"), find_post_data("password"))) {
 		printf("Status 403 Forbidden\r\n");
@@ -42,7 +21,6 @@ int handle_post(void)
 
 	int blogdir = open(DATA_DIRECTORY, O_DIRECTORY);
 	if (blogdir == -1) {
-		printf("open(%s): %s\n", DATA_DIRECTORY, strerror(errno));
 		return 1;
 	}
 
@@ -69,8 +47,7 @@ int handle_post(void)
 
 	int newpost = openat(blogdir, uri, O_WRONLY | O_CREAT, 0644);
 	if (newpost == -1) {
-		printf("open(%s): %s\n", uri, strerror(errno));
-		return 0;
+		return 1;
 	}
 
 	char *body = find_post_data("body");
@@ -81,8 +58,7 @@ int handle_post(void)
 	dprintf(newpost, HTML_HEAD, title);
 	dprintf(newpost, "<h1>%s</h1>\n", title);
 	if (write(newpost, body, strlen(body)) != strlen(body)) {
-		printf("write: %s\n", strerror(errno));
-		return 0;
+		return 1;
 	}
 	dprintf(newpost, HTML_TAIL, tm->tm_year + 1900);
 
