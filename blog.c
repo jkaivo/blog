@@ -59,10 +59,10 @@ int main(void)
 	puts("</head>");
 	puts("<body>");
 	printf("<form method=\"POST\" action=\"%s\">\n", getenv("DOCUMENT_URI"));
-	puts("Username: <input type=\"text\" name=\"username\"><br>");
-	puts("Password: <input type=\"password\" name=\"password\"><br>");
-	puts("Title: <input type=\"text\" name=\"title\"><br>");
-	puts("<textarea name=\"body\"></textarea><br>");
+	puts("<input type=\"text\" name=\"username\" placeholder=\"username\" size=\"80\"><br>");
+	puts("<input type=\"password\" name=\"password\" placeholder=\"password\" size=\"80\"><br>");
+	puts("<input type=\"text\" name=\"title\" placeholder=\"title\" size=\"80\"><br>");
+	puts("<textarea name=\"body\" cols=\"80\" rows=\"24\"></textarea><br>");
 	puts("<input type=\"submit\">");
 	puts("</form>");
 
