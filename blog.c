@@ -21,7 +21,9 @@
 
 #define HTML_HEAD DOCTYPE HTML META TITLE ICON STYLE BODY
 
-#define HTML_TAIL "\n</body>\n</html>\n"
+#define ADDRESS	"<address>Copyright &copy; %d <a href=\"/\">Jakob Kaivo</a> &lt;<a href=\"mailto:jakob@kaivo.net\">jakob@kaivo.net</a>&gt;\n"
+
+#define HTML_TAIL "\n" ADDRESS "</body>\n</html>\n"
 
 int handle_post(void)
 {
@@ -77,11 +79,12 @@ int handle_post(void)
 	}
 
 	dprintf(newpost, HTML_HEAD, title);
+	dprintf(newpost, "<h1>%s</h1>\n", title);
 	if (write(newpost, body, strlen(body)) != strlen(body)) {
 		printf("write: %s\n", strerror(errno));
 		return 0;
 	}
-	dprintf(newpost, HTML_TAIL);
+	dprintf(newpost, HTML_TAIL, tm->tm_year + 1900);
 
 	close(newpost);
 	close(blogdir);
@@ -111,7 +114,9 @@ int main(void)
 	puts("<input type=\"submit\">");
 	puts("</form>");
 
-	printf(HTML_TAIL);
+	time_t t = time(NULL);
+	struct tm *tm = localtime(&t);
+	printf(HTML_TAIL, tm->tm_year + 1900);
 
 	return 0;
 }
