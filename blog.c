@@ -10,10 +10,24 @@
 
 #include <errno.h>
 
+#define DOCTYPE	"<!DOCTYPE html>\n"
+#define HTML	"<html lang=\"en\">\n"
+#define META	"<meta charset=\"utf-8\">\n"
+#define TITLE	"<title>%s</title>\n"
+#define ICON	"<link type=\"shortcut icon\" href=\"/icon.png\">\n"
+#define STYLE	"<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">\n"
+#define BODY	"</html>\n<body>\n"
+
+#define HTML_HEAD DOCTYPE HTML META TITLE ICON STYLE BODY
+
+#define HTML_TAIL "</body>\n</html>\n"
+
 int handle_post(void)
 {
+	/*
 	printf("Status: 200 OK\r\n");
 	printf("Content-Type: text/plain\r\n\r\n");
+	*/
 
 	read_post_data();
 	if (!authenticate(find_post_data("username"), find_post_data("password"))) {
@@ -54,13 +68,15 @@ int handle_post(void)
 
 	char *body = find_post_data("body");
 	if (body == NULL) {
-		puts("body is null?!");
+		return 1;
 	}
 
+	dprintf(newpost, HTML_HEAD, title);
 	if (write(newpost, body, strlen(body)) != strlen(body)) {
 		printf("write: %s\n", strerror(errno));
 		return 0;
 	}
+	dprintf(newpost, HTML_TAIL);
 
 	close(newpost);
 	close(blogdir);
@@ -80,14 +96,8 @@ int main(void)
 	printf("Status: 200 OK\r\n");
 	printf("Content-Type: text/html\r\n\r\n");
 
-	puts("<!DOCTYPE html>");
-	puts("<html lang=\"en\">");
-	puts("<meta charset=\"utf-8\">");
-	puts("<title>Jakob Kaivo/blog</title>");
-	puts("<link type=\"shortcut icon\" href=\"/icon.png\">");
-	puts("<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">");
-	puts("</head>");
-	puts("<body>");
+	printf(HTML_HEAD, "new blog entry");
+
 	printf("<form method=\"POST\" action=\"%s\">\n", getenv("DOCUMENT_URI"));
 	puts("<input type=\"text\" name=\"username\" placeholder=\"username\" size=\"80\"><br>");
 	puts("<input type=\"password\" name=\"password\" placeholder=\"password\" size=\"80\"><br>");
@@ -95,8 +105,8 @@ int main(void)
 	puts("<textarea name=\"body\" cols=\"80\" rows=\"24\"></textarea><br>");
 	puts("<input type=\"submit\">");
 	puts("</form>");
-	puts("</body>");
-	puts("</html>");
+
+	printf(HTML_TAIL);
 
 	return 0;
 }
