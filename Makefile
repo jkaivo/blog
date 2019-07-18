@@ -1,7 +1,7 @@
 .POSIX:
 
 CFLAGS=-static
-OBJECTS=blog.o post.o
+OBJECTS=blog.o post.o auth.o
 
 all: blog
 

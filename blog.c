@@ -6,12 +6,6 @@
 
 extern char **environ;
 
-int verify_creds(const char *username, const char *password)
-{
-	printf("verifying '%s'/'%s'\n", username ? username : "", password ? password : "");
-	return 1;
-}
-
 int handle_post(void)
 {
 
