@@ -2,7 +2,7 @@
 #define BLOG_H
 
 #define PASSWORD_FILE	"/blog/password"
-#define DATA_DIRECTORY	"/jakob/blog"
+#define DATA_DIRECTORY	"/jakob"
 
 void read_post_data(void);
 char *find_post_data(char *key);
