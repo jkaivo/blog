@@ -1,8 +1,12 @@
 .POSIX:
 
 CFLAGS=-static
+OBJECTS=blog.o post.o
 
 all: blog
+
+blog: $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LDFLAGS) $(LIBS)
 
 install: blog
 	strip blog

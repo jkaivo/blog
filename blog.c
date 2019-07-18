@@ -1,14 +1,34 @@
+#define _XOPEN_SOURCE 700
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
+#include "blog.h"
 
 extern char **environ;
 
+int verify_creds(const char *username, const char *password)
+{
+	printf("verifying '%s'/'%s'\n", username ? username : "", password ? password : "");
+	return 1;
+}
+
 int handle_post(void)
 {
-	printf("Status: 301 Found\r\n");
-	printf("Location: http%s://%s%s\r\n\r\n", getenv("HTTPS") ? "s" : "", getenv("HTTP_HOST"), getenv("DOCUMENT_URI"));
+
+	//printf("Status: 301 Found\r\n");
+	//printf("Location: http%s://%s%s\r\n\r\n", getenv("HTTPS") ? "s" : "", getenv("HTTP_HOST"), getenv("DOCUMENT_URI"));
+
+	printf("Status: 200 OK\r\n");
+	printf("Content-Type: text/plain\r\n\r\n");
+
+	read_post_data();
+	if (!verify_creds(find_post_data("username"), find_post_data("password"))) {
+		// handle invalid login
+	}
+
+	for (char **e = environ; e && *e; e++) {
+		puts(*e);
+	}
 	return 0;
 }
 
@@ -51,11 +71,11 @@ int main(void)
 	puts("<input type=\"submit\">");
 	puts("</form>");
 
-	puts("<pre>");
+	puts("<!--");
 	for (char **e = environ; e && *e; e++) {
 		puts(*e);
 	}
-	puts("</pre>");
+	puts("-->");
 
 	puts("</body>");
 	puts("</html>");
