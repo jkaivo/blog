@@ -89,6 +89,9 @@ int handle_post(void)
 	close(newpost);
 	close(blogdir);
 
+	add_to_index(uri, title);
+
+
 	printf("Status: 302 Found\r\n");
 	printf("Location: http%s://%s/%s\r\n\r\n", getenv("HTTPS") ? "s" : "", getenv("HTTP_HOST"), uri);
 	return 0;
