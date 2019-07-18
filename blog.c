@@ -16,8 +16,9 @@ int handle_post(void)
 	printf("Content-Type: text/plain\r\n\r\n");
 
 	read_post_data();
-	if (!verify_creds(find_post_data("username"), find_post_data("password"))) {
-		// handle invalid login
+	if (!authenticate(find_post_data("username"), find_post_data("password"))) {
+		printf("Bad login!");
+		return 0;
 	}
 
 	for (char **e = environ; e && *e; e++) {
