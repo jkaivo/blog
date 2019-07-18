@@ -1,4 +1,5 @@
 #define _XOPEN_SOURCE 700
+#include <ctype.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +21,7 @@
 
 #define HTML_HEAD DOCTYPE HTML META TITLE ICON STYLE BODY
 
-#define HTML_TAIL "</body>\n</html>\n"
+#define HTML_TAIL "\n</body>\n</html>\n"
 
 int handle_post(void)
 {
@@ -58,7 +59,11 @@ int handle_post(void)
 
 	char *title = find_post_data("title");
 	char uri[FILENAME_MAX] = { 0 };
-	snprintf(uri, sizeof(uri), "%s/%s", ymd, title);
+	char *end = stpcpy(uri, ymd);
+	*end++ = '/';
+	for (char *f = title; *f != '\0'; f++) {
+		*end++ = isalnum(*f) ? *f : '-';
+	}
 
 	int newpost = openat(blogdir, uri, O_WRONLY | O_CREAT, 0644);
 	if (newpost == -1) {
