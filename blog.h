@@ -29,4 +29,6 @@ int show_entry(const char *path);
 
 void add_to_index(const char *path, const char *title);
 
+int current_year(void);
+
 #endif

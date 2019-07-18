@@ -9,6 +9,17 @@
 #include <unistd.h>
 #include "blog.h"
 
+int current_year(void)
+{
+	static int year = 0;
+	if (year == 0) {
+		time_t t = time(NULL);
+		struct tm *tm = localtime(&t);
+		year = tm->tm_year + 1900;
+	}
+	return year;
+}
+
 int handle_post(void)
 {
 	read_post_data();
@@ -60,13 +71,12 @@ int handle_post(void)
 	if (write(newpost, body, strlen(body)) != strlen(body)) {
 		return 1;
 	}
-	dprintf(newpost, HTML_TAIL, tm->tm_year + 1900);
+	dprintf(newpost, HTML_TAIL, current_year());
 
 	close(newpost);
 	close(blogdir);
 
 	add_to_index(uri, title);
-
 
 	printf("Status: 302 Found\r\n");
 	printf("Location: http%s://%s/%s\r\n\r\n", getenv("HTTPS") ? "s" : "", getenv("HTTP_HOST"), uri);
@@ -93,9 +103,7 @@ int main(void)
 	puts("<input type=\"submit\">");
 	puts("</form>");
 
-	time_t t = time(NULL);
-	struct tm *tm = localtime(&t);
-	printf(HTML_TAIL, tm->tm_year + 1900);
+	printf(HTML_TAIL, current_year());
 
 	return 0;
 }
