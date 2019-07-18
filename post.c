@@ -52,7 +52,8 @@ void read_post_data(void)
 			add_data(buf);
 			pos = 0;
 		} else if (c == '+') {
-			buf[++pos] = ' ';
+			buf[pos] = ' ';
+			buf[++pos] = '\0';
 		} else if (c == '%') {
 			char hex[3] = { 0, 0, 0 };
 			hex[0] = getchar();
