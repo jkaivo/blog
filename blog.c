@@ -53,7 +53,7 @@ int handle_post(void)
 	char *end = stpcpy(uri, ymd);
 	*end++ = '/';
 	for (char *f = title; *f != '\0'; f++) {
-		*end++ = isalnum(*f) ? *f : '-';
+		*end++ = isalnum(*f) ? tolower(*f) : '-';
 	}
 
 	int newpost = openat(blogdir, uri, O_WRONLY | O_CREAT, 0644);
