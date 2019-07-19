@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include "blog.h"
@@ -23,8 +25,15 @@ static void insert_into(int blogdir, char *index_dir, const char *uri, const cha
 	/* add old entries */
 	int old_index = openat(blogdir, index_path, O_RDONLY);
 	if (old_index != -1) {
-		/* find exising entries */
-		/* copy them to new_index */
+		struct stat st;
+		fstat(old_index, &st);
+		char *buf = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, old_index, 0);
+		if (buf != MAP_FAILED) {
+			char *a = strstr(buf, "<a");
+			char *add = strstr(a, "<address");
+			write(new_index, a, add - a);
+			munmap(buf, st.st_size);
+		}
 		close(old_index);
 	}
 
