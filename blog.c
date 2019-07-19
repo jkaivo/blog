@@ -49,11 +49,26 @@ int handle_post(void)
 	mkdirat(blogdir, ymd, 0755);
 
 	char *title = find_post_data("title");
+	while (isblank(*title)) {
+		title++;
+	}
+	size_t len = strlen(title);
+	while (isblank(title[--len])) {
+		title[len] = '\0';
+	}
+
 	char uri[FILENAME_MAX] = { 0 };
 	char *end = stpcpy(uri, ymd);
 	*end++ = '/';
+	int dash = 0;
 	for (char *f = title; *f != '\0'; f++) {
-		*end++ = isalnum(*f) ? tolower(*f) : '-';
+		if (isalnum(*f)) {
+			*end++ = tolower(*f);
+			dash = 0;
+		} else if (!dash) {
+			dash = 1;
+			*end++ = '-';
+		}
 	}
 
 	int newpost = openat(blogdir, uri, O_WRONLY | O_CREAT, 0644);
