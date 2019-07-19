@@ -20,7 +20,7 @@ static void insert_into(int blogdir, char *index_dir, const char *uri, const cha
 	int new_index = openat(blogdir, new_path, O_WRONLY | O_CREAT, 0644);
 
 	dprintf(new_index, HTML_HEAD, "index");
-	dprintf(new_index, "<a href=\"/%s\">%s</a><br>", uri, title);
+	dprintf(new_index, "<a href=\"/%s\">%s</a><br>\n", uri, title);
 
 	/* add old entries */
 	int old_index = openat(blogdir, index_path, O_RDONLY);
