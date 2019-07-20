@@ -10,7 +10,7 @@
 
 #include "blog.h"
 
-static void insert_into(int blogdir, char *index_dir, const char *uri, const char *title)
+static void insert_into(const char *user, int blogdir, char *index_dir, const char *uri, const char *title)
 {
 	char index_path[FILENAME_MAX] = { 0 };
 	snprintf(index_path, sizeof(index_path), "%s/index.html", index_dir);
@@ -37,16 +37,16 @@ static void insert_into(int blogdir, char *index_dir, const char *uri, const cha
 		close(old_index);
 	}
 
-	dprintf(new_index, HTML_TAIL, current_year());
+	dprintf(new_index, HTML_TAIL, current_year(), user_name(user), user_email(user));
 
 	close(new_index);
 
 	renameat(blogdir, new_path, blogdir, index_path);
 }
 
-void add_to_index(const char *path, const char *title)
+void add_to_index(const char *user, const char *path, const char *title)
 {
-	int blogdir = open(DATA_DIRECTORY, O_DIRECTORY);
+	int blogdir = open(user, O_DIRECTORY);
 	if (blogdir == -1) {
 		return;
 	}
@@ -57,11 +57,11 @@ void add_to_index(const char *path, const char *title)
 	}
 
 	char *day = dirname(dir);
-	insert_into(blogdir, day, path, title);
+	insert_into(user, blogdir, day, path, title);
 	char *month = dirname(day);
-	insert_into(blogdir, month, path, title);
+	insert_into(user, blogdir, month, path, title);
 	char *year = dirname(month);
-	insert_into(blogdir, year, path, title);
+	insert_into(user, blogdir, year, path, title);
 
 	free(dir);
 	close(blogdir);

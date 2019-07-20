@@ -2,7 +2,6 @@
 #define BLOG_H
 
 #define PASSWORD_FILE	"/blog/password"
-#define DATA_DIRECTORY	"/jakob"
 
 #define DOCTYPE "<!DOCTYPE html>\n"
 #define HTML    "<html lang=\"en\">\n"
@@ -14,12 +13,15 @@
 
 #define HTML_HEAD DOCTYPE HTML META TITLE ICON STYLE BODY
 
-#define ADDRESS "<address>Copyright &copy; %d <a href=\"/\">Jakob Kaivo</a> &lt;<a href=\"mailto:jakob@kaivo.net\">jakob@kaivo.net</a>&gt;\n"
+#define ADDRESS "<address>Copyright &copy; %1$d <a href=\"/\">%2$s</a> &lt;<a href=\"mailto:%3$s\">%3$s</a>&gt;\n"
 
 #define HTML_TAIL "\n" ADDRESS "</body>\n</html>\n"
 
 void read_post_data(void);
 char *find_post_data(char *key);
+
+char *user_name(const char *user);
+char *user_email(const char *user);
 
 int authenticate(const char *username, const char *password);
 
@@ -27,7 +29,7 @@ int handle_post(void);
 
 int show_entry(const char *path);
 
-void add_to_index(const char *path, const char *title);
+void add_to_index(const char *user, const char *path, const char *title);
 
 int current_year(void);
 

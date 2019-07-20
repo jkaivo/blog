@@ -20,17 +20,48 @@ int current_year(void)
 	return year;
 }
 
+void readfile(const char *path, char *buf, size_t n)
+{
+	FILE *f = fopen(path, "r");
+	fgets(buf, n, f);
+	fclose(f);
+	size_t len = strlen(buf);
+	if (buf[len-1] == '\n') {
+		buf[len-1] = '\0';
+	}
+}
+
+char *user_name(const char *user)
+{
+	static char name[BUFSIZ] = {0};
+	char path[FILENAME_MAX];
+	snprintf(path, sizeof(path), "/%s/.name", user);
+	readfile(path, name, sizeof(name));
+	return name;
+}
+
+char *user_email(const char *user)
+{
+	static char email[BUFSIZ] = {0};
+	char path[FILENAME_MAX];
+	snprintf(path, sizeof(path), "/%s/.email", user);
+	readfile(path, email, sizeof(email));
+	return email;
+}
+
 int handle_post(void)
 {
 	read_post_data();
-	if (!authenticate(find_post_data("username"), find_post_data("password"))) {
+	char *user = find_post_data("username");
+	if (!authenticate(user, find_post_data("password"))) {
 		printf("Status 403 Forbidden\r\n");
 		printf("Content-Type: text/plain\r\n\r\n");
 		puts("Incorrect username or password. Go back and try again.");
 		return 0;
 	}
 
-	int blogdir = open(DATA_DIRECTORY, O_DIRECTORY);
+	chdir("/");
+	int blogdir = open(user, O_DIRECTORY);
 	if (blogdir == -1) {
 		return 1;
 	}
@@ -86,12 +117,12 @@ int handle_post(void)
 	if (write(newpost, body, strlen(body)) != strlen(body)) {
 		return 1;
 	}
-	dprintf(newpost, HTML_TAIL, current_year());
+	dprintf(newpost, HTML_TAIL, current_year(), user_name(user), user_email(user));
 
 	close(newpost);
 	close(blogdir);
 
-	add_to_index(uri, title);
+	add_to_index(user, uri, title);
 
 	printf("Status: 302 Found\r\n");
 	printf("Location: http%s://%s/%s\r\n\r\n", getenv("HTTPS") ? "s" : "", getenv("HTTP_HOST"), uri);
@@ -114,11 +145,11 @@ int main(void)
 	puts("<input type=\"text\" name=\"username\" placeholder=\"username\" size=\"80\"><br>");
 	puts("<input type=\"password\" name=\"password\" placeholder=\"password\" size=\"80\"><br>");
 	puts("<input type=\"text\" name=\"title\" placeholder=\"title\" size=\"80\"><br>");
-	puts("<textarea name=\"body\" cols=\"80\" rows=\"24\"></textarea><br>");
+	puts("<textarea name=\"body\" cols=\"80\" rows=\"24\"><p></p></textarea><br>");
 	puts("<input type=\"submit\">");
 	puts("</form>");
 
-	printf(HTML_TAIL, current_year());
+	printf(HTML_TAIL, current_year(), "Jakob Kaivo", "jakob@kaivo.net");
 
 	return 0;
 }
