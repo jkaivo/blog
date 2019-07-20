@@ -101,6 +101,7 @@ int handle_post(void)
 			*end++ = '-';
 		}
 	}
+	strcat(uri, ".html");
 
 	int newpost = openat(blogdir, uri, O_WRONLY | O_CREAT, 0644);
 	if (newpost == -1) {
