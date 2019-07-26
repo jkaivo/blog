@@ -1,8 +1,6 @@
 #ifndef BLOG_H
 #define BLOG_H
 
-#define PASSWORD_FILE	"/blog/password"
-
 #define DOCTYPE "<!DOCTYPE html>\n"
 #define HTML    "<html lang=\"en\">\n"
 #define META    "<meta charset=\"utf-8\">\n"
@@ -23,11 +21,7 @@ char *find_post_data(char *key);
 char *user_name(const char *user);
 char *user_email(const char *user);
 
-int authenticate(const char *username, const char *password);
-
 int handle_post(void);
-
-int show_entry(const char *path);
 
 void add_to_index(const char *user, const char *path, const char *title);
 

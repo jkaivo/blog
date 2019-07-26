@@ -51,14 +51,15 @@ char *user_email(const char *user)
 
 int handle_post(void)
 {
-	read_post_data();
-	char *user = find_post_data("username");
-	if (!authenticate(user, find_post_data("password"))) {
+	char *user = getenv("REMOTE_USER");
+	if (!user) {
 		printf("Status 403 Forbidden\r\n");
 		printf("Content-Type: text/plain\r\n\r\n");
 		puts("Incorrect username or password. Go back and try again.");
 		return 0;
 	}
+
+	read_post_data();
 
 	chdir("/");
 	int blogdir = open(user, O_DIRECTORY);
@@ -132,6 +133,7 @@ int handle_post(void)
 
 int main(void)
 {
+	char *user = getenv("REMOTE_USER");
 	char *method = getenv("REQUEST_METHOD");
 	if (!strcmp(method, "POST")) {
 		return handle_post();
@@ -142,9 +144,11 @@ int main(void)
 
 	printf(HTML_HEAD, "new blog entry");
 
+	if (user) {
+		printf("<p>Posting as %s</p>\n", user);
+	}
+
 	printf("<form method=\"POST\" action=\"%s\">\n", getenv("DOCUMENT_URI"));
-	puts("<input type=\"text\" name=\"username\" placeholder=\"username\" size=\"80\"><br>");
-	puts("<input type=\"password\" name=\"password\" placeholder=\"password\" size=\"80\"><br>");
 	puts("<input type=\"text\" name=\"title\" placeholder=\"title\" size=\"80\"><br>");
 	puts("<textarea name=\"body\" cols=\"80\" rows=\"24\"><p></p></textarea><br>");
 	puts("<input type=\"submit\">");
