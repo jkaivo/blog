@@ -148,11 +148,18 @@ int main(void)
 		printf("<p>Posting as %s</p>\n", user);
 	}
 
+	puts("<script type=\"text/javascript\">");
+	puts("function update() {");
+        puts("\tdocument.getElementById(\"output\").innerHTML = document.getElementById(\"body\").value;");
+	puts("}");
+	puts("</script>");
+
 	printf("<form method=\"POST\" action=\"%s\">\n", getenv("DOCUMENT_URI"));
 	puts("<input type=\"text\" name=\"title\" placeholder=\"title\" size=\"80\"><br>");
-	puts("<textarea name=\"body\" cols=\"80\" rows=\"24\"><p></p></textarea><br>");
-	puts("<input type=\"submit\">");
+	puts("<textarea id=\"body\" name=\"body\" cols=\"80\" rows=\"24\" oninput=\"update();\"><p></p></textarea><br>");
+	puts("<input type=\"submit\" value=\"Post\">");
 	puts("</form>");
+	puts("<div id=\"output\"></div>");
 
 	printf(HTML_TAIL, current_year(), "Jakob Kaivo", "jakob@kaivo.net");
 
