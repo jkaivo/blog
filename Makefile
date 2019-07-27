@@ -1,6 +1,6 @@
 .POSIX:
 
-CFLAGS=-static
+CFLAGS=-static -Wall
 OBJECTS=blog.o post.o index.o
 
 all: blog
