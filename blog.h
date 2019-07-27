@@ -7,7 +7,7 @@
 #define TITLE   "<title>%s</title>\n"
 #define ICON    "<link type=\"shortcut icon\" href=\"/icon.png\">\n"
 #define STYLE   "<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">\n"
-#define BODY    "</html>\n<body>\n"
+#define BODY    "</head>\n<body>\n"
 
 #define HTML_HEAD DOCTYPE HTML META TITLE ICON STYLE BODY
 
