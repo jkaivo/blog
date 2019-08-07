@@ -154,7 +154,7 @@ int main(void)
 	puts("}");
 	puts("</script>");
 
-	printf("<form method=\"POST\" action=\"%s\">\n", getenv("DOCUMENT_URI"));
+	printf("<form method=\"POST\">\n");
 	puts("<input type=\"text\" name=\"title\" placeholder=\"title\" size=\"80\"><br>");
 	puts("<textarea id=\"body\" name=\"body\" cols=\"80\" rows=\"24\" oninput=\"update();\"><p></p></textarea><br>");
 	puts("<input type=\"submit\" value=\"Post\">");
