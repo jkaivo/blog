@@ -47,7 +47,9 @@ void read_post_data(void)
 
 	int pos = 0;
 	int c;
-	while ((c = getchar()) != EOF) {
+	buf[0] = '\0';
+
+	while (pos < cl && (c = getchar()) != EOF) {
 		if (c == '&') {
 			add_data(buf);
 			pos = 0;
