@@ -11,7 +11,7 @@
 
 #define HTML_HEAD DOCTYPE HTML META TITLE ICON STYLE BODY
 
-#define ADDRESS "<address>Copyright &copy; %1$d <a href=\"/\">%2$s</a> &lt;<a href=\"mailto:%3$s\">%3$s</a>&gt;\n"
+#define ADDRESS "<address>Copyright &copy; %1$d <a href=\"/\">%2$s</a> &lt;<a href=\"mailto:%3$s\">%3$s</a>&gt;</address>\n"
 
 #define HTML_TAIL "\n" ADDRESS "</body>\n</html>\n"
 
