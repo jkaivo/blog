@@ -151,6 +151,9 @@ int main(void)
 	puts("<script type=\"text/javascript\">");
 	puts("function update() {");
         puts("\tdocument.getElementById(\"output\").innerHTML = document.getElementById(\"body\").value;");
+	puts("\twindow.onbeforeunload = function() {");
+	puts("\t\treturn 'Are you sure you want to leave?';");
+	puts("\t}");
 	puts("}");
 	puts("</script>");
 
